@@ -1,0 +1,102 @@
+{
+	"name": "Transformacion_DWH",
+	"properties": {
+		"activities": [
+			{
+				"name": "Transformacion_General",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Transformacion_General",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Transformacion_Cliente",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Transformacion_General",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Transformacion_Cliente",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Transformacion_Credito",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Transformacion_Cliente",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Transformacion_Credito",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "SP_DWH_Elimina_Stage_General",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Transformacion_Captacion",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "SP_DWH_Elimina_Stage_General",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "Transformacion_Captacion",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "Transformacion_Credito",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "Transformacion_Captacion",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			}
+		],
+		"annotations": []
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
